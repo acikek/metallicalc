@@ -62,7 +62,7 @@ pub fn parse(result: Result<Vec<Token>, String>, debug: bool) -> Result<LinkedLi
             RParen => {
                 loop {
                     if stack.is_empty() { 
-                        return Err(format!("Unmatched RParen at position {}", i));
+                        return Err(String::from("Unmatched RParen"));
                     } else {
                         let stack_top = stack.pop().unwrap();
 
@@ -78,7 +78,7 @@ pub fn parse(result: Result<Vec<Token>, String>, debug: bool) -> Result<LinkedLi
 
     for (i, t) in stack.iter().rev().enumerate() {
         if t == &LParen {
-            return Err(format!("Unmatched LParen at position {}", i));
+            return Err(String::from("Unmatched LParen"));
         } else {
             // println!("Pushing {:?} to queue", t);
             queue.push_back(*t);
