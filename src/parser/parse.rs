@@ -32,7 +32,7 @@ pub fn parse(result: Result<Vec<Token>, String>, debug: bool) -> Result<LinkedLi
     let mut queue = LinkedList::<Token>::new();
     let mut stack: Vec<Token> = vec![];
 
-    for (i, t) in tokens.iter().enumerate() {
+    for t in tokens.iter() {
         // println!("Token={:?}, Queue={:?}, Stack={:?}", t, queue, stack);
 
         match t {
@@ -76,7 +76,7 @@ pub fn parse(result: Result<Vec<Token>, String>, debug: bool) -> Result<LinkedLi
         }
     }
 
-    for (i, t) in stack.iter().rev().enumerate() {
+    for t in stack.iter().rev() {
         if t == &LParen {
             return Err(String::from("Unmatched LParen"));
         } else {
