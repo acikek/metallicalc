@@ -3,7 +3,6 @@ name = "metallicalc"
 description = "A calculator written in Rust"
 version = "1.0.0"
 edition = "2018"
-license = "MIT"
 license-file = "./LICENSE"
 documentation = "https://github.com/acikek/metallicalc"
 
