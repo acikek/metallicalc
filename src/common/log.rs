@@ -4,7 +4,7 @@ use colored::*;
 
 pub fn switch(s: &str, v: &mut bool) {
     *v = !(*v);
-    println!("Switch '{}' set to {}", s, v);
+    println!("Switch '{}' set to {}\n", s, v);
 }
 
 pub fn dbg(s: String) {
