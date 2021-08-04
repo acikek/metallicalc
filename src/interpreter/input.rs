@@ -1,21 +1,24 @@
-use std::io::{ stdin, stdout, Write };
+extern crate rustyline;
 
-pub fn input() -> String {
-    let mut result = String::new();
+use rustyline::{Editor, error::ReadlineError};
 
-    print!("> ");
-    let _ = stdout().flush();
+pub fn input(rl: &mut Editor::<()>) -> Result<String, ReadlineError> {
+    let result = rl.readline("> ");
 
-    stdin().read_line(&mut result).expect("Invalid input");
+    return match result {
+        Ok(line) => {
+            let s = line.as_str();
+            let trimmed = String::from(s
+                .strip_suffix("\r\n")
+                .or(s.strip_suffix("\n"))
+                .unwrap_or(s)
+            );
 
-    let trimmed = String::from(
-        result
-            .strip_suffix("\r\n")
-            .or(result.strip_suffix("\n"))
-            .unwrap()
-    );
-
-    return trimmed;
+            rl.add_history_entry(&trimmed);
+            Ok(trimmed)
+        },
+        Err(_) => result
+    };
 }
 
 pub fn err(e: String) {

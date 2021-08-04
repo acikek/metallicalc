@@ -1,3 +1,5 @@
+extern crate rustyline;
+
 mod common;
 mod lexer;
 mod parser;
@@ -5,9 +7,25 @@ mod interpreter;
 
 use std::env;
 
+use rustyline::Editor;
+
 use lexer::lex::*;
 use parser::parse::*;
 use interpreter::{input::*, interpret::*};
+
+const HELP: &str = 
+r#"metallicalc, a calculator written in Rust
+MIT (c) 2021 Kyle P.
+
+Enter an arithmetic expression for evaluation.
+Whitespace is completely ignored outside of
+numeric sequences.
+
+Use the '--debug' switch (-d) to view the
+lexing and parsing process.
+
+Enter 'quit' or press Ctrl+C to exit.
+"#;
 
 fn main() {
     // Args
@@ -19,38 +37,33 @@ fn main() {
     }
 
     // Intro
-    println!(
-"metallicalc, a calculator written in Rust
-MIT (c) 2021 Kyle P.
+    println!("{}", HELP);
 
-Enter an arithmetic expression for evaluation.
-Whitespace is completely ignored outside of
-numeric sequences.
-
-Use the '--debug' switch (-d) to view the
-lexing and parsing process.
-
-Enter 'quit' or press Ctrl+C to exit.
-    ");
+    let mut rl = Editor::<()>::new();
 
     loop {
-        let s = input();
-
-        if s.trim().to_lowercase() == "quit" { break; }
+        let res = input(&mut rl);
         
-        let tokens = lex(s, debug);
-        let parsed = parse(tokens, debug);
-        let result = interpret(parsed);
-
-        match result {
-            Ok(_) => (),
-            Err(e) => {
-                err(e);
-                continue;
-            }
+        match res {
+            Ok(s) => {
+                if s.trim().to_lowercase() == "quit" { break; }
+        
+                let tokens = lex(s, debug);
+                let parsed = parse(tokens, debug);
+                let result = interpret(parsed);
+        
+                match result {
+                    Ok(_) => (),
+                    Err(e) => {
+                        err(e);
+                        continue;
+                    }
+                }
+        
+                println!("{}\n", result.unwrap());
+            },
+            Err(_) => break
         }
-
-        println!("{}\n", result.unwrap());
     }
 
     println!("Exiting...");
