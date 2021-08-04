@@ -79,7 +79,6 @@ pub fn lex(s: String, debug: bool) -> Result<Vec<Token>, String> {
             '%' => Ok(Op(Mod)),
             '(' => Ok(LParen),
             ')' => Ok(RParen),
-            ' ' => Err(format!("Invalid whitespace at position {}", position)),
             _ => Err(format!("Invalid token '{}' at position {}", c, position))
         };
 
