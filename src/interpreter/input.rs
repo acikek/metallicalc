@@ -1,9 +1,11 @@
+extern crate colored;
 extern crate rustyline;
 
+use colored::*;
 use rustyline::{Editor, error::ReadlineError};
 
 pub fn input(rl: &mut Editor::<()>) -> Result<String, ReadlineError> {
-    let result = rl.readline("> ");
+    let result = rl.readline(format!("{}", "=> ".bright_blue()).as_str());
 
     return match result {
         Ok(line) => {

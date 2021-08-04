@@ -16,8 +16,8 @@ pub fn lex(s: &String, debug: bool) -> CalcResult<Vec<Token>> {
     let mut num_end = false;
     
     for (i, c) in trimmed.chars().enumerate() {
-        let position: u16 = (i + 1) as u16;
-        let is_end = position == trimmed.len() as u16;
+        let position = i + 1;
+        let is_end = position == trimmed.len();
         
         // println!("'{}' at {}. num_start={}, num_end={}, is_end={}, position={}, len={}", c, i, num_start, num_end, is_end, position, s.len());
 
