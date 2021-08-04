@@ -1,6 +1,6 @@
 use std::collections::LinkedList;
 
-use super::super::common::enums::{ Token, Operator };
+use super::super::common::{types::CalcResult, log::dbg, enums::{Token, Operator}};
 
 use Token::*;
 use Operator::*;
@@ -21,7 +21,7 @@ fn left_associative(op: &Operator) -> bool {
     }
 }
 
-pub fn parse(result: Result<Vec<Token>, String>, debug: bool) -> Result<LinkedList<Token>, String> {
+pub fn parse(result: CalcResult<Vec<Token>>, debug: bool) -> CalcResult<LinkedList<Token>> {
     if result.is_err() { return Err(result.unwrap_err()) }
 
     let tokens: Vec<Token> = result.unwrap();
@@ -62,7 +62,7 @@ pub fn parse(result: Result<Vec<Token>, String>, debug: bool) -> Result<LinkedLi
             RParen => {
                 loop {
                     if stack.is_empty() { 
-                        return Err(String::from("Unmatched RParen"));
+                        return Err((String::from("Unmatched RParen"), None));
                     } else {
                         let stack_top = stack.pop().unwrap();
 
@@ -78,7 +78,7 @@ pub fn parse(result: Result<Vec<Token>, String>, debug: bool) -> Result<LinkedLi
 
     for t in stack.iter().rev() {
         if t == &LParen {
-            return Err(String::from("Unmatched LParen"));
+            return Err((String::from("Unmatched LParen"), None));
         } else {
             // println!("Pushing {:?} to queue", t);
             queue.push_back(*t);
@@ -86,7 +86,7 @@ pub fn parse(result: Result<Vec<Token>, String>, debug: bool) -> Result<LinkedLi
     }
 
     if debug {
-        println!("[DEBUG] Parser Queue: {:?}", queue);
+        dbg(format!("Parser Queue: {:?}", queue));
     }
 
     return Ok(queue);

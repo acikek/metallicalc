@@ -20,7 +20,3 @@ pub fn input(rl: &mut Editor::<()>) -> Result<String, ReadlineError> {
         Err(_) => result
     };
 }
-
-pub fn err(e: String) {
-    println!("ERR! {}\n", e);
-}

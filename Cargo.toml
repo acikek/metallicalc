@@ -8,3 +8,4 @@ documentation = "https://github.com/acikek/metallicalc"
 
 [dependencies]
 rustyline = "8.2.0"
+colored = "2"

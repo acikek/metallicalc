@@ -1,6 +1,6 @@
-use super::super::common::enums::{ Token, Operator };
+use super::super::common::{types::CalcResult, log::dbg, enums::{Token, Operator}};
 
-pub fn lex(s: String, debug: bool) -> Result<Vec<Token>, String> {
+pub fn lex(s: &String, debug: bool) -> CalcResult<Vec<Token>> {
     use Token::*;
     use Operator::*;
 
@@ -16,8 +16,8 @@ pub fn lex(s: String, debug: bool) -> Result<Vec<Token>, String> {
     let mut num_end = false;
     
     for (i, c) in trimmed.chars().enumerate() {
-        let position = i + 1;
-        let is_end = position == trimmed.len();
+        let position: u16 = (i + 1) as u16;
+        let is_end = position == trimmed.len() as u16;
         
         // println!("'{}' at {}. num_start={}, num_end={}, is_end={}, position={}, len={}", c, i, num_start, num_end, is_end, position, s.len());
 
@@ -26,7 +26,7 @@ pub fn lex(s: String, debug: bool) -> Result<Vec<Token>, String> {
             // or there has already been a decimal point recorded,
             // it is an invalid sequence.
             if !num_start || num_end {
-                return Err(format!("Invalid token after '{}' at position {}", current, position));
+                return Err((format!("Invalid token after '{}' at position {}", current, position), Some(position)));
             }
             
             current.push(c);
@@ -48,7 +48,7 @@ pub fn lex(s: String, debug: bool) -> Result<Vec<Token>, String> {
         // If by this point there is just the end (.) and no
         // trailing numbers, then the sequence is incomplete.
         if num_end && !num_start {
-            return Err(format!("Unfinished numeric sequence '{}' at position {}", current, position));
+            return Err((format!("Unfinished numeric sequence '{}' at position {}", current, position), Some(position)));
         }
 
         if num_start || num_end {
@@ -82,13 +82,13 @@ pub fn lex(s: String, debug: bool) -> Result<Vec<Token>, String> {
             _ => Err(format!("Invalid token '{}' at position {}", c, position))
         };
 
-        if parsed.is_err() { return Err(parsed.unwrap_err()) }
+        if parsed.is_err() { return Err((parsed.unwrap_err(), Some(position))) }
 
         result.push(parsed.unwrap());
     }
 
-    if debug { 
-        println!("[DEBUG] Lexer Output: {:?}", result);
+    if debug {
+        dbg(format!("Lexer Output: {:?}", result));
     }
 
     return Ok(result);

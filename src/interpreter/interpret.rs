@@ -1,11 +1,11 @@
 use std::collections::LinkedList;
 
-use super::super::common::enums::{ Token, Operator };
+use super::super::common::{types::CalcResult, enums::{Token, Operator}};
 
 use Token::*;
 use Operator::*;
 
-pub fn interpret(result: Result<LinkedList<Token>, String>) -> Result<f64, String> {
+pub fn interpret(result: CalcResult<LinkedList<Token>>) -> CalcResult<f64> {
     if result.is_err() { return Err(result.unwrap_err()) }
 
     let mut queue: LinkedList<Token> = result.unwrap();
@@ -16,7 +16,7 @@ pub fn interpret(result: Result<LinkedList<Token>, String>) -> Result<f64, Strin
             return Ok(*n);
         }
     } else if queue.is_empty() {
-        return Err(String::from("Empty expression"));
+        return Err((String::from("Empty expression"), None));
     }
 
     while !queue.is_empty() {
@@ -31,7 +31,7 @@ pub fn interpret(result: Result<LinkedList<Token>, String>) -> Result<f64, Strin
             let o1 = stack.pop();
 
             if o1.is_none() || o2.is_none() {
-                return Err(String::from("Unfinished expression"));
+                return Err((String::from("Unfinished expression"), None));
             }
 
             let n1 = o1.unwrap();
@@ -57,7 +57,7 @@ pub fn interpret(result: Result<LinkedList<Token>, String>) -> Result<f64, Strin
     // println!("END, Stack={:?}", stack);
 
     if stack.len() > 1 {
-        return Err(String::from("Imbalanced expression"));
+        return Err((String::from("Imbalanced expression"), None));
     }
 
     return Ok(*stack.first().unwrap());

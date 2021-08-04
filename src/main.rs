@@ -12,6 +12,7 @@ use rustyline::Editor;
 use lexer::lex::*;
 use parser::parse::*;
 use interpreter::{input::*, interpret::*};
+use common::log::err;
 
 const HELP: &str = 
 r#"metallicalc, a calculator written in Rust
@@ -48,14 +49,14 @@ fn main() {
             Ok(s) => {
                 if s.trim().to_lowercase() == "quit" { break; }
         
-                let tokens = lex(s, debug);
+                let tokens = lex(&s, debug);
                 let parsed = parse(tokens, debug);
                 let result = interpret(parsed);
         
                 match result {
                     Ok(_) => (),
-                    Err(e) => {
-                        err(e);
+                    Err((e, pos)) => {
+                        err(e, &s, pos);
                         continue;
                     }
                 }
