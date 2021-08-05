@@ -1,7 +1,7 @@
 [package]
 name = "metallicalc"
 description = "A calculator written in Rust"
-version = "2.0.0"
+version = "2.1.0"
 edition = "2018"
 license-file = "./LICENSE"
 documentation = "https://github.com/acikek/metallicalc"
