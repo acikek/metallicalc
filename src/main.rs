@@ -6,13 +6,14 @@ mod lexer;
 mod parser;
 mod interpreter;
 
-use colored::*;
+use std::collections::HashMap;
+
 use rustyline::Editor;
 
 use lexer::lex::*;
 use parser::parse::*;
 use interpreter::{input::*, interpret::*};
-use common::log::{switch, err};
+use common::log::*;
 
 const INTRO: &str = 
 r#"metallicalc, a calculator written in Rust
@@ -43,16 +44,19 @@ fn main() {
     println!("{}", INTRO);
 
     let mut rl = Editor::<()>::new();
+    let mut cache = HashMap::<String, f64>::new();
 
     loop {
-        let res = input(&mut rl);
+        let i = input(&mut rl);
         
-        match res {
+        match i {
             Ok(s) => {
                 let mut cmd = true;
+                let t = s.trim();
+                let stripped = strip_whitespace(t);
 
                 // Commands
-                match s.trim().to_lowercase().as_str() {
+                match t.to_lowercase().as_str() {
                     "clear" => { 
                         rl.clear_history();
                         println!("Line history cleared\n");
@@ -65,6 +69,12 @@ fn main() {
                 };
 
                 if cmd { continue };
+
+                if cache.contains_key(&stripped) {
+                    let v = *cache.get(&stripped).unwrap();
+                    if debug { dbg(format!("Cached string '{}' returned {}", stripped, v)); }
+                    res(v); continue;
+                }
         
                 let tokens = lex(&s, debug);
                 let parsed = parse(tokens, debug);
@@ -78,8 +88,10 @@ fn main() {
                     }
                 }
                 
-                let n = format!("{}", result.unwrap());
-                println!("{}\n", n.bright_yellow());
+                let n = result.unwrap();
+
+                cache.insert(stripped, n);
+                res(n);
             },
             Err(_) => break
         }
