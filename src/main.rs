@@ -27,11 +27,11 @@ press Ctrl+C to exit.
 "#;
 
 const HELP: &str = 
-r#"clear: clears line history
-debug: toggles debug messages
-help: displays this message
-quit: exits the program
-trace: toggles error traces
+r#"clear -    clears line history
+debug - toggles debug messages
+help  -  displays this message
+quit  -      exits the program
+trace -   toggles error traces
 "#;
 
 fn main() {
