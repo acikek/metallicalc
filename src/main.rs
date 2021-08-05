@@ -27,7 +27,10 @@ press Ctrl+C to exit.
 "#;
 
 const HELP: &str = 
-r#"clear -    clears line history
+r#"cache -   toggles expr caching
+cc    -      clears expr cache
+clear -    clears line history
+dc    -    displays expr cache
 debug - toggles debug messages
 help  -  displays this message
 quit  -      exits the program
@@ -38,6 +41,7 @@ fn main() {
     // Switches
     let mut debug = false;
     let mut trace = true;
+    let mut cache_v = true;
 
     // Intro
     println!("{}", INTRO);
@@ -56,9 +60,22 @@ fn main() {
 
                 // Commands
                 match t.to_lowercase().as_str() {
+                    "cache" => { switch("cache", &mut cache_v); }
+                    "cc" => {
+                        cache.clear();
+                        println!("Cache cleared\n");
+                    }
                     "clear" => { 
                         rl.clear_history();
                         println!("Line history cleared\n");
+                    },
+                    "dc" => {
+                        if cache.is_empty() {
+                            println!("Nothing in cache\n");
+                        } else {
+                            let list: Vec<String> = cache.clone().into_iter().map(|(k, v)| format!("{} => {}", k, v)).collect();
+                            println!("{}\n", list.join("\n"));
+                        }
                     },
                     "debug" => { switch("debug", &mut debug) },
                     "help" => { println!("{}", HELP) },
@@ -69,7 +86,7 @@ fn main() {
 
                 if cmd { continue };
 
-                if cache.contains_key(&stripped) {
+                if cache_v && cache.contains_key(&stripped) {
                     let v = *cache.get(&stripped).unwrap();
                     if debug { dbg(format!("Cached string '{}' returned {}", stripped, v)); }
                     res(v); continue;
@@ -89,7 +106,7 @@ fn main() {
                 
                 let n = result.unwrap();
 
-                cache.insert(stripped, n);
+                if cache_v { cache.insert(stripped, n); }
                 res(n);
             },
             Err(_) => break
