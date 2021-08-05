@@ -1,6 +1,6 @@
-extern crate ansi_term;
+extern crate colored;
 
-use ansi_term::Color::{Green, Red, Yellow};
+use colored::*;
 
 pub fn switch(s: &str, v: &mut bool) {
     *v = !(*v);
@@ -8,14 +8,14 @@ pub fn switch(s: &str, v: &mut bool) {
 }
 
 pub fn dbg(s: String) {
-    println!("{} {}", Green.paint("DBG:"), s);
+    println!("{} {}", "DBG:".green(), s);
 }
 
 pub fn err(e: String, s: &String, pos: Option<usize>, t: bool) {
     let prefix = "ERR!";
     
     let trace: String = if t { 
-        let spacing = format!("{}{} ", " ".repeat(prefix.len() - 1), Red.paint("|"));
+        let spacing = format!("{}{} ", " ".repeat(prefix.len() - 1), "|".red());
 
         match pos {
             Some(p) => format!("\n{}\n{}{}\n{}{}{}", spacing, spacing, s, spacing, " ".repeat(p - 1), "^"),
@@ -25,9 +25,9 @@ pub fn err(e: String, s: &String, pos: Option<usize>, t: bool) {
         String::new() 
     };
 
-    println!("{} {}{}\n", Red.paint("ERR!"), e, trace);
+    println!("{} {}{}\n", "ERR!".red(), e, trace);
 }
 
 pub fn res(n: f64) {
-    println!("{}\n", Yellow.paint(format!("{}", n)));
+    println!("{}\n", format!("{}", n).bright_yellow());
 }

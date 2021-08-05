@@ -1,3 +1,4 @@
+extern crate colored;
 extern crate rustyline;
 
 use rustyline::{Editor, error::ReadlineError};
