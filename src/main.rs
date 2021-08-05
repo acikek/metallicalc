@@ -1,4 +1,3 @@
-extern crate colored;
 extern crate rustyline;
 
 mod common;
