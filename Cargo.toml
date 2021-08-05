@@ -1,11 +1,11 @@
 [package]
 name = "metallicalc"
 description = "A calculator written in Rust"
-version = "2.1.1"
+version = "2.1.2"
 edition = "2018"
 license-file = "./LICENSE"
 documentation = "https://github.com/acikek/metallicalc"
 
 [dependencies]
 rustyline = "8.2.0"
-colored = "2"
+ansi_term = "*"
