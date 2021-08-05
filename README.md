@@ -17,6 +17,8 @@ cargo install metallicalc
 
 Run the `metallicalc` command from a terminal of your choice.
 
+**Note**: The Windows `cmd.exe` is not fully supported. There may be broken color codes should you decide to use it.
+
 ## License
 
 MIT © 2021 Kyle Prince
