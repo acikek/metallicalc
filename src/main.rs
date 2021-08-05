@@ -1,3 +1,4 @@
+extern crate ansi_term;
 extern crate rustyline;
 
 mod common;
@@ -38,6 +39,10 @@ trace -   toggles error traces
 "#;
 
 fn main() {
+    match ansi_term::enable_ansi_support() {
+        _ => ()
+    };
+
     // Switches
     let mut debug = false;
     let mut trace = true;
