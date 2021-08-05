@@ -27,3 +27,7 @@ pub fn err(e: String, s: &String, pos: Option<usize>, t: bool) {
 
     println!("{} {}{}\n", "ERR!".red(), e, trace);
 }
+
+pub fn res(n: f64) {
+    println!("{}\n", format!("{}", n).bright_yellow());
+}

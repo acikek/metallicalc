@@ -22,3 +22,13 @@ pub fn input(rl: &mut Editor::<()>) -> Result<String, ReadlineError> {
         Err(_) => result
     };
 }
+
+pub fn strip_whitespace(s: &str) -> String {
+    let mut result = String::new();
+
+    for c in s.chars() {
+        if c != ' ' { result.push(c); }
+    }
+
+    return result;
+}
